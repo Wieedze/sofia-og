@@ -131,29 +131,37 @@ export default async function ShortProfilePage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Stats row: Level, Signals, Trusted By */}
+        {/* Level + Signals circle */}
         <div style={{
-          display: 'flex', justifyContent: 'space-between', textAlign: 'center',
+          display: 'flex', alignItems: 'center', gap: '20px',
           marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #14141e',
         }}>
-          <div>
-            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
-              {data.level}
-            </p>
-            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Level</p>
+          <p style={{ fontSize: '40px', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1 }}>
+            Level {data.level}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{
+              width: '56px', height: '56px', borderRadius: '50%',
+              border: '3px solid #6366f1',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: '18px', fontWeight: 700, color: '#fff' }}>{signalsCount}</span>
+            </div>
+            <span style={{ fontSize: '9px', color: '#555568', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Signals</span>
           </div>
-          <div>
-            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
-              {signalsCount}
-            </p>
-            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Signals</p>
-          </div>
-          <div>
-            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
-              {data.trustCircle}
-            </p>
-            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Trusted By</p>
-          </div>
+        </div>
+
+        {/* Trusted By */}
+        <div style={{
+          display: 'flex', alignItems: 'baseline', gap: '8px',
+          marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #14141e',
+        }}>
+          <p style={{ fontSize: '40px', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1 }}>
+            {data.trustCircle}
+          </p>
+          <p style={{ fontSize: '16px', color: '#a0a0b8', margin: 0 }}>
+            people trust me
+          </p>
         </div>
 
         {/* Discovery Score */}
