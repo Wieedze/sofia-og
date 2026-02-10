@@ -34,12 +34,8 @@ export async function GET(req: NextRequest) {
   const interests = parseInterests(searchParams.get('interests'))
   const displayName = searchParams.get('name') || truncateWallet(wallet)
 
-  // Fetch logo from public directory and convert to base64 data URI
-  const logoUrl = new URL('/sofia-logo.png', req.url).toString()
-  const logoRes = await fetch(logoUrl)
-  const logoArrayBuffer = await logoRes.arrayBuffer()
-  const logoBase64 = Buffer.from(logoArrayBuffer).toString('base64')
-  const logoSrc = `data:image/png;base64,${logoBase64}`
+  // Use absolute public URL — static files are served by Vercel CDN, not edge runtime
+  const logoSrc = 'https://sofia-og.vercel.app/sofia-logo.png'
 
   return new ImageResponse(
     (
