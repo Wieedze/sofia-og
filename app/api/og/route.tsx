@@ -31,9 +31,9 @@ export async function GET(req: NextRequest) {
   const trustCircle = parseInt(searchParams.get('trustCircle') || '0', 10)
   const pioneer = parseInt(searchParams.get('pioneer') || '0', 10)
   const explorer = parseInt(searchParams.get('explorer') || '0', 10)
+  const signals = parseInt(searchParams.get('signals') || '0', 10)
   const interests = parseInterests(searchParams.get('interests'))
   const displayName = searchParams.get('name') || truncateWallet(wallet)
-  const discovery = pioneer + explorer
 
   const logoSrc = 'https://sofia-og.vercel.app/sofia-logo.png'
 
@@ -89,117 +89,84 @@ export async function GET(req: NextRequest) {
             </div>
           </div>
 
-          {/* Level */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
-            <span style={{ fontSize: '42px', fontWeight: 700, color: '#ffffff', display: 'flex', marginBottom: '10px' }}>
-              Level {level}
-            </span>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <span
-                style={{
-                  padding: '4px 14px',
-                  background: '#12121e',
-                  border: '1px solid #1a1a2e',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  color: '#8b8ba0',
-                  fontWeight: 600,
-                  display: 'flex',
-                }}
-              >
-                Level
-              </span>
-              {pioneer > 0 && (
-                <span
-                  style={{
-                    padding: '4px 14px',
-                    background: '#1a1608',
-                    border: '1px solid #2e2a14',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    color: '#D4A843',
-                    fontWeight: 600,
-                    display: 'flex',
-                  }}
-                >
-                  Pioneer
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Trust Circle row */}
+          {/* Stats row: Level, Signals, Trusted By */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
               justifyContent: 'space-between',
               marginBottom: '20px',
               paddingBottom: '20px',
               borderBottom: '1px solid #14141e',
             }}
           >
-            <span style={{ fontSize: '17px', color: '#a0a0b8', display: 'flex' }}>
-              <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '22px', marginRight: '6px', display: 'flex' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '36px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                {level}
+              </span>
+              <span style={{ fontSize: '11px', color: '#555568', display: 'flex', letterSpacing: '0.5px' }}>
+                LEVEL
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '36px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                {signals}
+              </span>
+              <span style={{ fontSize: '11px', color: '#555568', display: 'flex', letterSpacing: '0.5px' }}>
+                SIGNALS
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '36px', fontWeight: 700, color: '#fff', display: 'flex' }}>
                 {trustCircle}
               </span>
-              {' '}people in my trust circle
-            </span>
-            {/* Discovery circle */}
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                border: '3px solid #6366f1',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <span style={{ fontSize: '22px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-                {discovery}
+              <span style={{ fontSize: '11px', color: '#555568', display: 'flex', letterSpacing: '0.5px' }}>
+                TRUSTED BY
               </span>
             </div>
           </div>
 
-          {/* Discovery: Pioneer + Explorer */}
-          <div style={{ display: 'flex', gap: '14px', marginBottom: '24px' }}>
-            <div
-              style={{
-                flex: 1,
-                padding: '14px 18px',
-                background: '#0e0e16',
-                border: '1px solid #1a1a2e',
-                borderRadius: '14px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ fontSize: '11px', color: '#D4A843', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
-                PIONEER
-              </span>
-              <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-                {pioneer}
-              </span>
-            </div>
-            <div
-              style={{
-                flex: 1,
-                padding: '14px 18px',
-                background: '#0e0e16',
-                border: '1px solid #1a1a2e',
-                borderRadius: '14px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ fontSize: '11px', color: '#6366f1', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
-                EXPLORER
-              </span>
-              <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-                {explorer}
-              </span>
+          {/* Discovery Score */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
+            <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '12px', display: 'flex' }}>
+              DISCOVERY SCORE
+            </span>
+            <div style={{ display: 'flex', gap: '14px' }}>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '14px 18px',
+                  background: '#0e0e16',
+                  border: '1px solid #1a1a2e',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <span style={{ fontSize: '11px', color: '#D4A843', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
+                  PIONEER
+                </span>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  {pioneer}
+                </span>
+              </div>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '14px 18px',
+                  background: '#0e0e16',
+                  border: '1px solid #1a1a2e',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <span style={{ fontSize: '11px', color: '#6366f1', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
+                  EXPLORER
+                </span>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  {explorer}
+                </span>
+              </div>
             </div>
           </div>
 

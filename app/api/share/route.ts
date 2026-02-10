@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
 
-    const { wallet, level, trustCircle, pioneer, explorer, interests, name } = data
+    const { wallet, level, trustCircle, pioneer, explorer, signals, interests, name } = data
 
     if (!wallet) {
       return NextResponse.json({ error: 'wallet is required' }, { status: 400, headers: CORS_HEADERS })
@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
       trustCircle: trustCircle || '0',
       pioneer: pioneer || '0',
       explorer: explorer || '0',
+      signals: signals || '0',
       interests: interests || '',
       name: name || '',
     }, { ex: 60 * 60 * 24 * 30 }) // expires in 30 days

@@ -8,6 +8,7 @@ interface ProfileData {
   trustCircle: string
   pioneer: string
   explorer: string
+  signals: string
   interests: string
   name: string
 }
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!data) return { title: 'Profile not found' }
 
   const displayName = data.name || truncateWallet(data.wallet)
-  const description = `Level ${data.level} | ${data.trustCircle} Trust Circle | ${data.pioneer} Pioneer | ${data.explorer} Explorer`
+  const description = `Level ${data.level} | ${data.signals || '0'} Signals | ${data.trustCircle} Trust Circle | ${data.pioneer} Pioneer | ${data.explorer} Explorer`
 
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -46,6 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   ogParams.set('trustCircle', data.trustCircle)
   ogParams.set('pioneer', data.pioneer)
   ogParams.set('explorer', data.explorer)
+  ogParams.set('signals', data.signals || '0')
   if (data.interests) ogParams.set('interests', data.interests)
   if (data.name) ogParams.set('name', data.name)
 
@@ -75,7 +77,6 @@ export default async function ShortProfilePage({ params }: PageProps) {
   if (!data) notFound()
 
   const displayName = data.name || truncateWallet(data.wallet)
-  const discovery = parseInt(data.pioneer || '0', 10) + parseInt(data.explorer || '0', 10)
   const interestList = data.interests
     ? data.interests.split(',').map((item) => {
         const parts = item.split(':')
@@ -83,8 +84,7 @@ export default async function ShortProfilePage({ params }: PageProps) {
       })
     : []
 
-  const pioneerCount = parseInt(data.pioneer || '0', 10)
-  const explorerCount = parseInt(data.explorer || '0', 10)
+  const signalsCount = parseInt(data.signals || '0', 10)
 
   return (
     <div
@@ -131,66 +131,55 @@ export default async function ShortProfilePage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Level */}
-        <div style={{ marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '38px', fontWeight: 700, color: '#ffffff', margin: '0 0 8px 0' }}>
-            Level {data.level}
-          </h2>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <span style={{
-              padding: '4px 12px', background: '#12121e', border: '1px solid #1a1a2e',
-              borderRadius: '8px', fontSize: '12px', color: '#8b8ba0', fontWeight: 600,
-            }}>
-              Level
-            </span>
-            {pioneerCount > 0 && (
-              <span style={{
-                padding: '4px 12px', background: '#1a1608', border: '1px solid #2e2a14',
-                borderRadius: '8px', fontSize: '12px', color: '#D4A843', fontWeight: 600,
-              }}>
-                Pioneer
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Trust Circle */}
+        {/* Stats row: Level, Signals, Trusted By */}
         <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          display: 'flex', justifyContent: 'space-between', textAlign: 'center',
           marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #14141e',
         }}>
-          <p style={{ fontSize: '16px', color: '#a0a0b8', margin: 0 }}>
-            <strong style={{ color: '#fff', fontSize: '20px' }}>{data.trustCircle}</strong> people in my trust circle
-          </p>
-          {/* Discovery circle */}
-          <div style={{
-            width: '68px', height: '68px', borderRadius: '50%',
-            border: '3px solid #6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column', flexShrink: 0,
-          }}>
-            <span style={{ fontSize: '20px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{discovery}</span>
+          <div>
+            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
+              {data.level}
+            </p>
+            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Level</p>
+          </div>
+          <div>
+            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
+              {signalsCount}
+            </p>
+            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Signals</p>
+          </div>
+          <div>
+            <p style={{ fontSize: '32px', fontWeight: 700, color: '#fff', margin: '0 0 4px 0' }}>
+              {data.trustCircle}
+            </p>
+            <p style={{ fontSize: '11px', color: '#555568', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Trusted By</p>
           </div>
         </div>
 
-        {/* Discovery section */}
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-          <div style={{
-            flex: 1, padding: '14px 16px',
-            background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
-          }}>
-            <p style={{ fontSize: '11px', color: '#D4A843', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
-              Pioneer
-            </p>
-            <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.pioneer}</p>
-          </div>
-          <div style={{
-            flex: 1, padding: '14px 16px',
-            background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
-          }}>
-            <p style={{ fontSize: '11px', color: '#6366f1', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
-              Explorer
-            </p>
-            <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.explorer}</p>
+        {/* Discovery Score */}
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#555568', margin: '0 0 12px 0', letterSpacing: '1px', textTransform: 'uppercase' }}>
+            Discovery Score
+          </h3>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{
+              flex: 1, padding: '14px 16px',
+              background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
+            }}>
+              <p style={{ fontSize: '11px', color: '#D4A843', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+                Pioneer
+              </p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.pioneer}</p>
+            </div>
+            <div style={{
+              flex: 1, padding: '14px 16px',
+              background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
+            }}>
+              <p style={{ fontSize: '11px', color: '#6366f1', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+                Explorer
+              </p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.explorer}</p>
+            </div>
           </div>
         </div>
 
