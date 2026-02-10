@@ -3,6 +3,11 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
+// Pre-fetch logo at module level (Vercel-recommended pattern for edge runtime)
+const logoData = fetch(
+  new URL('../../../public/sofia-logo.png', import.meta.url)
+).then((res) => res.arrayBuffer())
+
 // Level badge colors (matching Sofia extension design)
 const LEVEL_COLORS: Record<number, string> = {
   1: '#9CA3AF',
@@ -50,6 +55,11 @@ export async function GET(req: NextRequest) {
   const interests = parseInterests(searchParams.get('interests'))
   const displayName = searchParams.get('name') || truncateWallet(wallet)
 
+  // Convert logo to base64 data URI for edge runtime compatibility
+  const logoArrayBuffer = await logoData
+  const logoBase64 = Buffer.from(logoArrayBuffer).toString('base64')
+  const logoSrc = `data:image/png;base64,${logoBase64}`
+
   return new ImageResponse(
     (
       <div
@@ -90,7 +100,7 @@ export async function GET(req: NextRequest) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${req.nextUrl.origin}/sofia-logo.png`}
+            src={logoSrc}
             alt="Sofia"
             width={72}
             height={72}
