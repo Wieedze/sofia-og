@@ -217,8 +217,17 @@ export default async function ShortProfilePage({ params }: PageProps) {
           </div>
         )}
 
+        {/* Hidden profile data for Sofia extension content script */}
+        <div
+          id="sofia-profile-data"
+          data-wallet={data.wallet}
+          data-name={data.name || ''}
+          style={{ display: 'none' }}
+        />
+
         {/* CTA button */}
         <a
+          id="sofia-cta"
           href="https://chromewebstore.google.com"
           style={{
             display: 'block', textAlign: 'center',
