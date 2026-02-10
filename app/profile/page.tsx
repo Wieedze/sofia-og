@@ -4,7 +4,9 @@ interface ProfilePageProps {
   searchParams: Promise<{
     wallet?: string
     level?: string
-    signals?: string
+    trustCircle?: string
+    pioneer?: string
+    explorer?: string
     interests?: string
     name?: string
   }>
@@ -19,18 +21,21 @@ export async function generateMetadata({ searchParams }: ProfilePageProps): Prom
   const params = await searchParams
   const wallet = params.wallet || '0x0000...0000'
   const level = params.level || '1'
-  const signals = params.signals || '0'
+  const trustCircle = params.trustCircle || '0'
+  const pioneer = params.pioneer || '0'
+  const explorer = params.explorer || '0'
   const interests = params.interests || ''
   const displayName = params.name || truncateWallet(wallet)
 
-  const interestCount = interests ? interests.split(',').length : 0
-  const description = `Level ${level} | ${signals} Signals | ${interestCount} Interests`
+  const description = `Level ${level} | ${trustCircle} Trust Circle | ${pioneer} Pioneer | ${explorer} Explorer`
 
-  // Build OG image URL with same params
+  // Forward all params to OG image route
   const ogParams = new URLSearchParams()
   if (params.wallet) ogParams.set('wallet', params.wallet)
   if (params.level) ogParams.set('level', params.level)
-  if (params.signals) ogParams.set('signals', params.signals)
+  if (params.trustCircle) ogParams.set('trustCircle', params.trustCircle)
+  if (params.pioneer) ogParams.set('pioneer', params.pioneer)
+  if (params.explorer) ogParams.set('explorer', params.explorer)
   if (params.interests) ogParams.set('interests', params.interests)
   if (params.name) ogParams.set('name', params.name)
 
@@ -63,7 +68,9 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
   const params = await searchParams
   const wallet = params.wallet || '0x0000...0000'
   const level = params.level || '1'
-  const signals = params.signals || '0'
+  const trustCircle = params.trustCircle || '0'
+  const pioneer = params.pioneer || '0'
+  const explorer = params.explorer || '0'
   const interests = params.interests || ''
   const displayName = params.name || truncateWallet(wallet)
 
@@ -89,9 +96,14 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       }}
     >
       <h1 style={{ fontSize: '32px', marginBottom: '8px' }}>{displayName}</h1>
-      <p style={{ color: '#6b7280', marginBottom: '32px' }}>
-        Level {level} | {signals} Signals | {interestList.length} Interests
-      </p>
+
+      {/* Stats */}
+      <div style={{ display: 'flex', gap: '24px', color: '#6b7280', marginBottom: '32px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <span>Level <strong style={{ color: '#fff' }}>{level}</strong></span>
+        <span>Trust Circle <strong style={{ color: '#fff' }}>{trustCircle}</strong></span>
+        <span style={{ color: '#FFD700' }}>Pioneer <strong>{pioneer}</strong></span>
+        <span style={{ color: '#3B82F6' }}>Explorer <strong>{explorer}</strong></span>
+      </div>
 
       {interestList.length > 0 && (
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '600px' }}>
@@ -106,7 +118,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                 fontSize: '14px',
               }}
             >
-              {interest.name} LVL {interest.level}
+              {interest.name}
             </span>
           ))}
         </div>
