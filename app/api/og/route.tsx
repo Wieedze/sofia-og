@@ -47,73 +47,84 @@ export async function GET(req: NextRequest) {
           background: '#050507',
           fontFamily: 'sans-serif',
           color: '#ffffff',
-          padding: '48px 56px',
+          padding: '44px 56px',
         }}
       >
-        {/* Left column: branding + stats */}
+        {/* Left column: branding + level + discovery */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            width: '520px',
+            width: '540px',
             paddingRight: '48px',
             borderRight: '1px solid #14141e',
           }}
         >
           {/* Header: Sofia branding + wallet */}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              marginBottom: '28px',
+            }}
+          >
+            <img
+              src={logoSrc}
+              alt="Sofia"
+              width={44}
+              height={44}
+              style={{ borderRadius: '50%' }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '0.5px', display: 'flex' }}>
+                SOFIA PROFILE
+              </span>
+              <span style={{ fontSize: '18px', color: '#a0a0b8', display: 'flex' }}>
+                {displayName}
+              </span>
+            </div>
+          </div>
+
+          {/* Level + Signals circle */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '24px',
+              marginBottom: '32px',
+            }}
+          >
+            <span style={{ fontSize: '52px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
+              Level {level}
+            </span>
+            {/* Signals circle */}
             <div
               style={{
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                gap: '14px',
-                marginBottom: '32px',
+                gap: '4px',
               }}
             >
-              <img
-                src={logoSrc}
-                alt="Sofia"
-                width={48}
-                height={48}
-                style={{ borderRadius: '50%' }}
-              />
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '13px', color: '#555568', letterSpacing: '0.5px', display: 'flex' }}>
-                  SOFIA PROFILE
-                </span>
-                <span style={{ fontSize: '20px', color: '#a0a0b8', display: 'flex' }}>
-                  {displayName}
-                </span>
-              </div>
-            </div>
-
-            {/* Stats: Level, Signals, Trusted By */}
-            <div style={{ display: 'flex', gap: '40px', marginBottom: '40px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '48px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
-                  {level}
-                </span>
-                <span style={{ fontSize: '13px', color: '#555568', display: 'flex', marginTop: '6px', letterSpacing: '1px' }}>
-                  LEVEL
-                </span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '48px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
+              <div
+                style={{
+                  width: '68px',
+                  height: '68px',
+                  borderRadius: '50%',
+                  border: '3px solid #6366f1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ fontSize: '22px', fontWeight: 700, color: '#fff', display: 'flex' }}>
                   {signals}
                 </span>
-                <span style={{ fontSize: '13px', color: '#555568', display: 'flex', marginTop: '6px', letterSpacing: '1px' }}>
-                  SIGNALS
-                </span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '48px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
-                  {trustCircle}
-                </span>
-                <span style={{ fontSize: '13px', color: '#555568', display: 'flex', marginTop: '6px', letterSpacing: '1px' }}>
-                  TRUSTED BY
-                </span>
-              </div>
+              <span style={{ fontSize: '10px', color: '#555568', display: 'flex', letterSpacing: '0.5px' }}>
+                SIGNALS
+              </span>
             </div>
           </div>
 
@@ -126,7 +137,7 @@ export async function GET(req: NextRequest) {
               <div
                 style={{
                   flex: 1,
-                  padding: '16px 20px',
+                  padding: '14px 18px',
                   background: '#0e0e16',
                   border: '1px solid #1a1a2e',
                   borderRadius: '14px',
@@ -134,17 +145,17 @@ export async function GET(req: NextRequest) {
                   flexDirection: 'column',
                 }}
               >
-                <span style={{ fontSize: '12px', color: '#D4A843', letterSpacing: '1px', fontWeight: 600, marginBottom: '6px', display: 'flex' }}>
+                <span style={{ fontSize: '11px', color: '#D4A843', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
                   PIONEER
                 </span>
-                <span style={{ fontSize: '32px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
                   {pioneer}
                 </span>
               </div>
               <div
                 style={{
                   flex: 1,
-                  padding: '16px 20px',
+                  padding: '14px 18px',
                   background: '#0e0e16',
                   border: '1px solid #1a1a2e',
                   borderRadius: '14px',
@@ -152,10 +163,10 @@ export async function GET(req: NextRequest) {
                   flexDirection: 'column',
                 }}
               >
-                <span style={{ fontSize: '12px', color: '#6366f1', letterSpacing: '1px', fontWeight: 600, marginBottom: '6px', display: 'flex' }}>
+                <span style={{ fontSize: '11px', color: '#6366f1', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
                   EXPLORER
                 </span>
-                <span style={{ fontSize: '32px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
                   {explorer}
                 </span>
               </div>
@@ -163,19 +174,38 @@ export async function GET(req: NextRequest) {
           </div>
         </div>
 
-        {/* Right column: interests */}
+        {/* Right column: trusted by + interests */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
             paddingLeft: '48px',
-            justifyContent: 'center',
           }}
         >
-          {interests.length > 0 ? (
+          {/* Trusted By - prominent */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: '10px',
+              marginBottom: '32px',
+              paddingBottom: '24px',
+              borderBottom: '1px solid #14141e',
+            }}
+          >
+            <span style={{ fontSize: '52px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
+              {trustCircle}
+            </span>
+            <span style={{ fontSize: '20px', color: '#a0a0b8', display: 'flex' }}>
+              people trust me
+            </span>
+          </div>
+
+          {/* Interests */}
+          {interests.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '20px', display: 'flex' }}>
+              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '16px', display: 'flex' }}>
                 INTERESTS
               </span>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -183,29 +213,19 @@ export async function GET(req: NextRequest) {
                   <div
                     key={interest.name}
                     style={{
-                      padding: '10px 22px',
+                      padding: '8px 20px',
                       background: '#0e0e16',
                       border: '1px solid #1a1a2e',
                       borderRadius: '20px',
                       display: 'flex',
                     }}
                   >
-                    <span style={{ fontSize: '16px', color: '#b0b0c8', display: 'flex' }}>
+                    <span style={{ fontSize: '15px', color: '#b0b0c8', display: 'flex' }}>
                       {interest.name}
                     </span>
                   </div>
                 ))}
               </div>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <img
-                src={logoSrc}
-                alt="Sofia"
-                width={120}
-                height={120}
-                style={{ borderRadius: '50%', opacity: 0.15 }}
-              />
             </div>
           )}
         </div>
@@ -214,13 +234,13 @@ export async function GET(req: NextRequest) {
         <div
           style={{
             position: 'absolute',
-            bottom: '20px',
+            bottom: '18px',
             left: '0',
             right: '0',
             display: 'flex',
             justifyContent: 'center',
             color: '#333340',
-            fontSize: '14px',
+            fontSize: '13px',
           }}
         >
           sofia.intuition.box
