@@ -95,12 +95,18 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
         padding: '40px 20px',
       }}
     >
-      <h1 style={{ fontSize: '32px', marginBottom: '8px' }}>{displayName}</h1>
+      {/* Sofia branding */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+        <img src="/sofia-logo.png" alt="Sofia" width={56} height={56} style={{ borderRadius: '50%' }} />
+        <span style={{ fontSize: '32px', fontWeight: 700 }}>Sofia</span>
+      </div>
+
+      <h1 style={{ fontSize: '28px', marginBottom: '8px' }}>{displayName}</h1>
 
       {/* Stats */}
       <div style={{ display: 'flex', gap: '24px', color: '#6b7280', marginBottom: '32px', flexWrap: 'wrap', justifyContent: 'center' }}>
         <span>Level <strong style={{ color: '#fff' }}>{level}</strong></span>
-        <span>Trust Circle <strong style={{ color: '#fff' }}>{trustCircle}</strong></span>
+        <span><strong style={{ color: '#fff' }}>{trustCircle}</strong> people in my trust circle</span>
         <span style={{ color: '#FFD700' }}>Pioneer <strong>{pioneer}</strong></span>
         <span style={{ color: '#3B82F6' }}>Explorer <strong>{explorer}</strong></span>
       </div>
