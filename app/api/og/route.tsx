@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
   const displayName = searchParams.get('name') || truncateWallet(wallet)
 
   // Use absolute public URL — static files are served by Vercel CDN, not edge runtime
-  const logoSrc = 'https://sofia-og.vercel.app/sofia-logo.png'
+  const logoSrc = 'https://sofia-card.vercel.app/sofia-logo.png'
 
   return new ImageResponse(
     (
