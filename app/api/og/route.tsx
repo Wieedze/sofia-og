@@ -33,9 +33,9 @@ export async function GET(req: NextRequest) {
   const explorer = parseInt(searchParams.get('explorer') || '0', 10)
   const interests = parseInterests(searchParams.get('interests'))
   const displayName = searchParams.get('name') || truncateWallet(wallet)
+  const discovery = pioneer + explorer
 
-  // Use absolute public URL — static files are served by Vercel CDN, not edge runtime
-  const logoSrc = 'https://sofia-card.vercel.app/sofia-logo.png'
+  const logoSrc = 'https://sofia-og.vercel.app/sofia-logo.png'
 
   return new ImageResponse(
     (
@@ -44,198 +44,201 @@ export async function GET(req: NextRequest) {
           width: '1200px',
           height: '630px',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(145deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%)',
+          background: '#050507',
           fontFamily: 'sans-serif',
           color: '#ffffff',
-          position: 'relative',
         }}
       >
-        {/* Subtle gradient border effect */}
+        {/* Card */}
         <div
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '3px',
-            background: 'linear-gradient(90deg, #8276ED, #F6427B, #FFBF33)',
+            width: '520px',
             display: 'flex',
-          }}
-        />
-
-        {/* Sofia branding top */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            marginBottom: '28px',
+            flexDirection: 'column',
+            background: 'linear-gradient(165deg, #0f1018 0%, #0a0a0f 50%, #08080c 100%)',
+            border: '1px solid #1a1a2e',
+            borderRadius: '24px',
+            padding: '36px 32px',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logoSrc}
-            alt="Sofia"
-            width={72}
-            height={72}
-            style={{ borderRadius: '50%' }}
-          />
-          <span style={{ fontSize: '42px', fontWeight: 700, color: '#ffffff' }}>
-            Sofia
-          </span>
-        </div>
+          {/* Header: Sofia branding + wallet */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              marginBottom: '28px',
+            }}
+          >
+            <img
+              src={logoSrc}
+              alt="Sofia"
+              width={44}
+              height={44}
+              style={{ borderRadius: '50%' }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '0.5px', display: 'flex' }}>
+                SOFIA WALLET ADDRESS STATS
+              </span>
+              <span style={{ fontSize: '17px', color: '#a0a0b8', display: 'flex' }}>
+                {displayName}
+              </span>
+            </div>
+          </div>
 
-        {/* Wallet / Display name */}
-        <div
-          style={{
-            fontSize: '40px',
-            fontWeight: 600,
-            marginBottom: '40px',
-            color: '#e5e7eb',
-            display: 'flex',
-          }}
-        >
-          {displayName}
-        </div>
-
-        {/* Stats row */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '40px',
-            marginBottom: '48px',
-          }}
-        >
           {/* Level */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '48px',
-                fontWeight: 700,
-                color: '#ffffff',
-                display: 'flex',
-              }}
-            >
-              {level}
-            </div>
-            <div style={{ fontSize: '16px', color: '#6b7280', display: 'flex' }}>
-              Level
-            </div>
-          </div>
-
-          {/* Separator */}
-          <div style={{ width: '1px', height: '70px', background: '#2a2a2a', display: 'flex' }} />
-
-          {/* Trust Circle */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <div style={{ fontSize: '48px', fontWeight: 700, color: '#ffffff', display: 'flex' }}>
-              {trustCircle}
-            </div>
-            <div style={{ fontSize: '16px', color: '#6b7280', display: 'flex' }}>
-              Trust Circle
-            </div>
-          </div>
-
-          {/* Separator */}
-          <div style={{ width: '1px', height: '70px', background: '#2a2a2a', display: 'flex' }} />
-
-          {/* Pioneer */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <div style={{ fontSize: '48px', fontWeight: 700, color: '#FFD700', display: 'flex' }}>
-              {pioneer}
-            </div>
-            <div style={{ fontSize: '16px', color: '#6b7280', display: 'flex' }}>
-              Pioneer
-            </div>
-          </div>
-
-          {/* Separator */}
-          <div style={{ width: '1px', height: '70px', background: '#2a2a2a', display: 'flex' }} />
-
-          {/* Explorer */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <div style={{ fontSize: '48px', fontWeight: 700, color: '#3B82F6', display: 'flex' }}>
-              {explorer}
-            </div>
-            <div style={{ fontSize: '16px', color: '#6b7280', display: 'flex' }}>
-              Explorer
-            </div>
-          </div>
-
-        </div>
-
-        {/* Interests pills */}
-        {interests.length > 0 && (
-          <div
-            style={{
-              display: 'flex',
-              gap: '12px',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              maxWidth: '900px',
-            }}
-          >
-            {interests.map((interest) => (
-              <div
-                key={interest.name}
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
+            <span style={{ fontSize: '42px', fontWeight: 700, color: '#ffffff', display: 'flex', marginBottom: '10px' }}>
+              Level {level}
+            </span>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <span
                 style={{
+                  padding: '4px 14px',
+                  background: '#12121e',
+                  border: '1px solid #1a1a2e',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  color: '#8b8ba0',
+                  fontWeight: 600,
                   display: 'flex',
-                  alignItems: 'center',
-                  padding: '12px 24px',
-                  background: '#1a1a1a',
-                  border: '1px solid #2a2a2a',
-                  borderRadius: '28px',
                 }}
               >
-                <span style={{ fontSize: '20px', color: '#e5e7eb' }}>
-                  {interest.name}
+                Level
+              </span>
+              {pioneer > 0 && (
+                <span
+                  style={{
+                    padding: '4px 14px',
+                    background: '#1a1608',
+                    border: '1px solid #2e2a14',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    color: '#D4A843',
+                    fontWeight: 600,
+                    display: 'flex',
+                  }}
+                >
+                  Pioneer
                 </span>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
-        )}
 
-        {/* Footer branding */}
+          {/* Trust Circle row */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '20px',
+              paddingBottom: '20px',
+              borderBottom: '1px solid #14141e',
+            }}
+          >
+            <span style={{ fontSize: '17px', color: '#a0a0b8', display: 'flex' }}>
+              <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '22px', marginRight: '6px', display: 'flex' }}>
+                {trustCircle}
+              </span>
+              {' '}people in my trust circle
+            </span>
+            {/* Discovery circle */}
+            <div
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                border: '3px solid #6366f1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span style={{ fontSize: '22px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                {discovery}
+              </span>
+            </div>
+          </div>
+
+          {/* Discovery: Pioneer + Explorer */}
+          <div style={{ display: 'flex', gap: '14px', marginBottom: '24px' }}>
+            <div
+              style={{
+                flex: 1,
+                padding: '14px 18px',
+                background: '#0e0e16',
+                border: '1px solid #1a1a2e',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span style={{ fontSize: '11px', color: '#D4A843', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
+                PIONEER
+              </span>
+              <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                {pioneer}
+              </span>
+            </div>
+            <div
+              style={{
+                flex: 1,
+                padding: '14px 18px',
+                background: '#0e0e16',
+                border: '1px solid #1a1a2e',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span style={{ fontSize: '11px', color: '#6366f1', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
+                EXPLORER
+              </span>
+              <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                {explorer}
+              </span>
+            </div>
+          </div>
+
+          {/* Interests */}
+          {interests.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '8px' }}>
+              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '12px', display: 'flex' }}>
+                INTERESTS
+              </span>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {interests.slice(0, 6).map((interest) => (
+                  <div
+                    key={interest.name}
+                    style={{
+                      padding: '6px 16px',
+                      background: '#0e0e16',
+                      border: '1px solid #1a1a2e',
+                      borderRadius: '20px',
+                      display: 'flex',
+                    }}
+                  >
+                    <span style={{ fontSize: '14px', color: '#b0b0c8', display: 'flex' }}>
+                      {interest.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
         <div
           style={{
             position: 'absolute',
-            bottom: '24px',
+            bottom: '18px',
             display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            color: '#4b5563',
-            fontSize: '18px',
+            color: '#333340',
+            fontSize: '14px',
           }}
         >
           sofia.intuition.box

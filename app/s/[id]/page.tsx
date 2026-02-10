@@ -75,6 +75,7 @@ export default async function ShortProfilePage({ params }: PageProps) {
   if (!data) notFound()
 
   const displayName = data.name || truncateWallet(data.wallet)
+  const discovery = parseInt(data.pioneer || '0', 10) + parseInt(data.explorer || '0', 10)
   const interestList = data.interests
     ? data.interests.split(',').map((item) => {
         const parts = item.split(':')
@@ -82,72 +83,163 @@ export default async function ShortProfilePage({ params }: PageProps) {
       })
     : []
 
+  const pioneerCount = parseInt(data.pioneer || '0', 10)
+  const explorerCount = parseInt(data.explorer || '0', 10)
+
   return (
     <div
       style={{
         minHeight: '100vh',
-        background: '#0a0a0a',
+        background: '#050507',
         color: '#ffffff',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'system-ui, sans-serif',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
         padding: '40px 20px',
       }}
     >
-      {/* Sofia branding */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-        <img src="/sofia-logo.png" alt="Sofia" width={56} height={56} style={{ borderRadius: '50%' }} />
-        <span style={{ fontSize: '32px', fontWeight: 700 }}>Sofia</span>
-      </div>
-
-      <h1 style={{ fontSize: '28px', marginBottom: '8px' }}>{displayName}</h1>
-
-      {/* Stats */}
-      <div style={{ display: 'flex', gap: '24px', color: '#6b7280', marginBottom: '32px', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <span>Level <strong style={{ color: '#fff' }}>{data.level}</strong></span>
-        <span><strong style={{ color: '#fff' }}>{data.trustCircle}</strong> people in my trust circle</span>
-        <span style={{ color: '#FFD700' }}>Pioneer <strong>{data.pioneer}</strong></span>
-        <span style={{ color: '#3B82F6' }}>Explorer <strong>{data.explorer}</strong></span>
-      </div>
-
-      {interestList.length > 0 && (
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '600px' }}>
-          {interestList.map((interest) => (
-            <span
-              key={interest.name}
-              style={{
-                padding: '8px 16px',
-                background: '#1a1a1a',
-                border: '1px solid #2a2a2a',
-                borderRadius: '20px',
-                fontSize: '14px',
-              }}
-            >
-              {interest.name}
-            </span>
-          ))}
+      {/* Main card */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '420px',
+          background: 'linear-gradient(165deg, #0f1018 0%, #0a0a0f 50%, #08080c 100%)',
+          border: '1px solid #1a1a2e',
+          borderRadius: '24px',
+          padding: '32px 28px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Sofia watermark logo */}
+        <div style={{ position: 'absolute', top: '-20px', right: '-20px', opacity: 0.03, pointerEvents: 'none' }}>
+          <img src="/sofia-logo.png" alt="" width={200} height={200} />
         </div>
-      )}
 
-      <div style={{ marginTop: '48px' }}>
+        {/* Header: Sofia branding + wallet */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+          <img src="/sofia-logo.png" alt="Sofia" width={40} height={40} style={{ borderRadius: '50%' }} />
+          <div>
+            <p style={{ fontSize: '12px', color: '#555568', margin: '0 0 2px 0', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+              Sofia Wallet Address Stats
+            </p>
+            <p style={{ fontSize: '16px', color: '#a0a0b8', margin: 0, fontFamily: 'monospace' }}>
+              {displayName}
+            </p>
+          </div>
+        </div>
+
+        {/* Level */}
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '38px', fontWeight: 700, color: '#ffffff', margin: '0 0 8px 0' }}>
+            Level {data.level}
+          </h2>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <span style={{
+              padding: '4px 12px', background: '#12121e', border: '1px solid #1a1a2e',
+              borderRadius: '8px', fontSize: '12px', color: '#8b8ba0', fontWeight: 600,
+            }}>
+              Level
+            </span>
+            {pioneerCount > 0 && (
+              <span style={{
+                padding: '4px 12px', background: '#1a1608', border: '1px solid #2e2a14',
+                borderRadius: '8px', fontSize: '12px', color: '#D4A843', fontWeight: 600,
+              }}>
+                Pioneer
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Trust Circle */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #14141e',
+        }}>
+          <p style={{ fontSize: '16px', color: '#a0a0b8', margin: 0 }}>
+            <strong style={{ color: '#fff', fontSize: '20px' }}>{data.trustCircle}</strong> people in my trust circle
+          </p>
+          {/* Discovery circle */}
+          <div style={{
+            width: '68px', height: '68px', borderRadius: '50%',
+            border: '3px solid #6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column', flexShrink: 0,
+          }}>
+            <span style={{ fontSize: '20px', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{discovery}</span>
+          </div>
+        </div>
+
+        {/* Discovery section */}
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+          <div style={{
+            flex: 1, padding: '14px 16px',
+            background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
+          }}>
+            <p style={{ fontSize: '11px', color: '#D4A843', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+              Pioneer
+            </p>
+            <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.pioneer}</p>
+          </div>
+          <div style={{
+            flex: 1, padding: '14px 16px',
+            background: '#0e0e16', border: '1px solid #1a1a2e', borderRadius: '14px',
+          }}>
+            <p style={{ fontSize: '11px', color: '#6366f1', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+              Explorer
+            </p>
+            <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', margin: 0 }}>{data.explorer}</p>
+          </div>
+        </div>
+
+        {/* Interests */}
+        {interestList.length > 0 && (
+          <div style={{ marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#555568', margin: '0 0 12px 0', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              Interests
+            </h3>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {interestList.map((interest) => (
+                <span
+                  key={interest.name}
+                  style={{
+                    padding: '6px 14px',
+                    background: '#0e0e16',
+                    border: '1px solid #1a1a2e',
+                    borderRadius: '20px',
+                    fontSize: '13px',
+                    color: '#b0b0c8',
+                  }}
+                >
+                  {interest.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CTA button */}
         <a
           href="https://chromewebstore.google.com"
           style={{
-            padding: '12px 32px',
-            background: 'linear-gradient(135deg, #8276ED, #F6427B, #FFBF33)',
+            display: 'block', textAlign: 'center',
+            padding: '14px 24px',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
             color: '#fff',
-            borderRadius: '12px',
+            borderRadius: '14px',
             textDecoration: 'none',
-            fontWeight: 600,
+            fontWeight: 700,
+            fontSize: '15px',
           }}
         >
           Get Sofia Extension
         </a>
       </div>
 
-      <p style={{ color: '#4b5563', marginTop: '32px', fontSize: '14px' }}>
+      {/* Footer */}
+      <p style={{ color: '#333340', marginTop: '24px', fontSize: '13px' }}>
         sofia.intuition.box
       </p>
     </div>
