@@ -3,50 +3,16 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-function truncateWallet(wallet: string): string {
-  if (wallet.length <= 12) return wallet
-  return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`
-}
-
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
-  const wallet = searchParams.get('wallet') || '0x0000...0000'
-  const displayName = searchParams.get('name') || truncateWallet(wallet)
   const alphaRank = parseInt(searchParams.get('alphaRank') || '0', 10)
-  const totalAlpha = parseInt(searchParams.get('totalAlpha') || '0', 10)
-  const tx = parseInt(searchParams.get('tx') || '0', 10)
-  const intentions = parseInt(searchParams.get('intentions') || '0', 10)
-  const pioneer = parseInt(searchParams.get('pioneer') || '0', 10)
-  const trustVolume = searchParams.get('trustVolume') || '0 T'
-  const poolRank = searchParams.get('poolRank')
-  const totalPool = searchParams.get('totalPool')
-  const pnl = searchParams.get('pnl')
-  const pnlPercent = searchParams.get('pnlPercent')
+  const pnl = searchParams.get('pnl') || '+0 T'
+  const pnlPercent = searchParams.get('pnlPercent') || '+0%'
 
-  const hasPool = poolRank && pnl && pnlPercent
+  const isPositive = pnlPercent.startsWith('+')
+  const glowColor = isPositive ? '#22c55e' : '#ef4444'
 
   const logoSrc = 'https://sofia-og.vercel.app/sofia-logo.png'
-
-  const statCard = (label: string, value: string, color?: string) => (
-    <div
-      style={{
-        flex: 1,
-        padding: '14px 18px',
-        background: '#0e0e16',
-        border: '1px solid #1a1a2e',
-        borderRadius: '14px',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <span style={{ fontSize: '11px', color: color || '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex', textTransform: 'uppercase' }}>
-        {label}
-      </span>
-      <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-        {value}
-      </span>
-    </div>
-  )
 
   return new ImageResponse(
     (
@@ -55,143 +21,205 @@ export async function GET(req: NextRequest) {
           width: '1200px',
           height: '630px',
           display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           background: '#050507',
           fontFamily: 'sans-serif',
-          color: '#ffffff',
-          padding: '44px 56px',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        {/* Left column: branding + rank */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '440px',
-            paddingRight: '48px',
-            borderRight: '1px solid #14141e',
-          }}
-        >
-          {/* Header: Sofia branding + wallet */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '14px',
-              marginBottom: '28px',
-            }}
-          >
-            <img
-              src={logoSrc}
-              alt="Sofia"
-              width={44}
-              height={44}
-              style={{ borderRadius: '50%' }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '0.5px', display: 'flex' }}>
-                SOFIA BOARD
-              </span>
-              <span style={{ fontSize: '18px', color: '#a0a0b8', display: 'flex' }}>
-                {displayName}
-              </span>
-            </div>
-          </div>
-
-          {/* Alpha Rank - prominent */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginBottom: '32px',
-            }}
-          >
-            <span style={{ fontSize: '12px', color: '#C7866C', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px', display: 'flex' }}>
-              ALPHA RANK
-            </span>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-              <span style={{ fontSize: '64px', fontWeight: 700, color: '#fff', display: 'flex', lineHeight: 1 }}>
-                #{alphaRank}
-              </span>
-              <span style={{ fontSize: '20px', color: '#555568', display: 'flex' }}>
-                of {totalAlpha}
-              </span>
-            </div>
-          </div>
-
-          {/* Trust Volume */}
-          <div
-            style={{
-              padding: '18px 22px',
-              background: '#0e0e16',
-              border: '1px solid #1a1a2e',
-              borderRadius: '14px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <span style={{ fontSize: '11px', color: '#C7866C', letterSpacing: '1px', fontWeight: 600, marginBottom: '4px', display: 'flex' }}>
-              TRUST VOLUME
-            </span>
-            <span style={{ fontSize: '32px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-              {trustVolume}
-            </span>
-          </div>
-        </div>
-
-        {/* Right column: stats grid */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            paddingLeft: '48px',
-          }}
-        >
-          {/* Stats section label */}
-          <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '16px', display: 'flex' }}>
-            SEASON STATS
-          </span>
-
-          {/* Stats row 1 */}
-          <div style={{ display: 'flex', gap: '14px', marginBottom: '14px' }}>
-            {statCard('Transactions', String(tx))}
-            {statCard('Intentions', String(intentions))}
-          </div>
-
-          {/* Stats row 2 */}
-          <div style={{ display: 'flex', gap: '14px', marginBottom: hasPool ? '24px' : '0' }}>
-            {statCard('Pioneer', String(pioneer), '#D4A843')}
-          </div>
-
-          {/* Pool stats (conditional) */}
-          {hasPool && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '12px', color: '#555568', letterSpacing: '1px', fontWeight: 600, marginBottom: '12px', display: 'flex', paddingTop: '12px', borderTop: '1px solid #14141e' }}>
-                SEASON POOL
-              </span>
-              <div style={{ display: 'flex', gap: '14px' }}>
-                {statCard('Pool Rank', `#${poolRank}${totalPool ? ` / ${totalPool}` : ''}`)}
-                {statCard('P&L', pnl!, parseInt(pnl!) >= 0 || pnl!.startsWith('+') ? '#22c55e' : '#ef4444')}
-                {statCard('P&L %', pnlPercent!, pnlPercent!.startsWith('+') ? '#22c55e' : '#ef4444')}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
+        {/* Ambient glow — top-left green */}
         <div
           style={{
             position: 'absolute',
-            bottom: '18px',
-            left: '0',
-            right: '0',
+            top: '-120px',
+            left: '80px',
+            width: '500px',
+            height: '400px',
+            background: `radial-gradient(ellipse, ${glowColor}18 0%, transparent 70%)`,
             display: 'flex',
-            justifyContent: 'center',
-            color: '#333340',
-            fontSize: '13px',
+          }}
+        />
+        {/* Ambient glow — bottom-right */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '-100px',
+            right: '100px',
+            width: '500px',
+            height: '350px',
+            background: `radial-gradient(ellipse, ${glowColor}10 0%, transparent 70%)`,
+            display: 'flex',
+          }}
+        />
+
+        {/* 3D Card wrapper — simulated perspective via skew */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '820px',
+            height: '440px',
+            position: 'relative',
           }}
         >
-          board-sofia.intuition.box
+          {/* Card */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(145deg, #111116 0%, #0a0a0f 50%, #080810 100%)',
+              borderRadius: '32px',
+              border: '1px solid #1e1e2a',
+              padding: '40px 48px',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Left edge green glow (simulates 3D lighting) */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '4px',
+                height: '100%',
+                background: `linear-gradient(to bottom, ${glowColor}60, ${glowColor}20, transparent)`,
+                borderRadius: '32px 0 0 32px',
+                display: 'flex',
+              }}
+            />
+            {/* Top edge subtle glow */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '60%',
+                height: '3px',
+                background: `linear-gradient(to right, ${glowColor}40, transparent)`,
+                borderRadius: '32px 32px 0 0',
+                display: 'flex',
+              }}
+            />
+
+            {/* Header row: logo + rank badge */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '40px',
+              }}
+            >
+              {/* Sofia branding */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <img
+                  src={logoSrc}
+                  alt="Sofia"
+                  width={44}
+                  height={44}
+                  style={{ borderRadius: '50%' }}
+                />
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  Sofia
+                </span>
+              </div>
+
+              {/* Alpha rank badge */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '10px 24px',
+                  background: 'linear-gradient(135deg, #2a2a4a, #1a1a3a)',
+                  border: '1px solid #3a3a5a',
+                  borderRadius: '50px',
+                }}
+              >
+                <span style={{ fontSize: '18px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  #{alphaRank} Alpha
+                </span>
+              </div>
+            </div>
+
+            {/* Hero stat: P&L % */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '16px',
+                marginBottom: '12px',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '120px',
+                  fontWeight: 700,
+                  color: glowColor,
+                  lineHeight: 1,
+                  display: 'flex',
+                  letterSpacing: '-2px',
+                }}
+              >
+                {pnlPercent}
+              </span>
+              <span
+                style={{
+                  fontSize: '36px',
+                  fontWeight: 500,
+                  color: '#666680',
+                  display: 'flex',
+                }}
+              >
+                P&L
+              </span>
+            </div>
+
+            {/* Sub stat: P&L in Trust */}
+            <span
+              style={{
+                fontSize: '40px',
+                fontWeight: 600,
+                color: isPositive ? '#22c55e90' : '#ef444490',
+                display: 'flex',
+                letterSpacing: '-0.5px',
+              }}
+            >
+              {pnl}
+            </span>
+
+            {/* Spacer */}
+            <div style={{ flex: 1, display: 'flex' }} />
+
+            {/* Footer inside card */}
+            <span
+              style={{
+                fontSize: '16px',
+                color: '#333345',
+                display: 'flex',
+                letterSpacing: '1px',
+              }}
+            >
+              board-sofia.intuition.box
+            </span>
+          </div>
+
+          {/* Floor shadow / reflection */}
+          <div
+            style={{
+              display: 'flex',
+              width: '90%',
+              height: '30px',
+              margin: '0 auto',
+              background: `radial-gradient(ellipse, ${glowColor}15 0%, transparent 70%)`,
+              borderRadius: '50%',
+              marginTop: '-5px',
+            }}
+          />
         </div>
       </div>
     ),
