@@ -5,10 +5,15 @@ export const runtime = 'edge'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
+  const wallet = searchParams.get('wallet') || '0x0000...0000'
+  const name = searchParams.get('name') || ''
   const alphaRank = parseInt(searchParams.get('alphaRank') || '0', 10)
+  const intentions = searchParams.get('intentions') || '0'
+  const pioneer = searchParams.get('pioneer') || '0'
   const pnl = searchParams.get('pnl') || '+0 T'
   const pnlPercent = searchParams.get('pnlPercent') || '+0%'
 
+  const displayName = name || (wallet.length > 12 ? `${wallet.slice(0, 6)}...${wallet.slice(-4)}` : wallet)
   const isPositive = pnlPercent.startsWith('+')
   const glowColor = isPositive ? '#22c55e' : '#ef4444'
 
@@ -124,9 +129,14 @@ export async function GET(req: NextRequest) {
                   height={44}
                   style={{ borderRadius: '50%' }}
                 />
-                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
-                  Sofia
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                    Sofia
+                  </span>
+                  <span style={{ fontSize: '16px', fontWeight: 500, color: '#666680', display: 'flex', fontFamily: 'monospace' }}>
+                    {displayName}
+                  </span>
+                </div>
               </div>
 
               {/* Alpha rank badge */}
@@ -194,6 +204,32 @@ export async function GET(req: NextRequest) {
 
             {/* Spacer */}
             <div style={{ flex: 1, display: 'flex' }} />
+
+            {/* Stats row */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '32px',
+                marginBottom: '20px',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '14px', color: '#555568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', display: 'flex' }}>
+                  Intentions
+                </span>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  {intentions}
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '14px', color: '#D4A843', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', display: 'flex' }}>
+                  Pioneer
+                </span>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                  {pioneer}
+                </span>
+              </div>
+            </div>
 
             {/* Footer inside card */}
             <span
